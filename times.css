@@ -1,0 +1,36 @@
+/* Week planner blends into DaFishieSG's existing field-guide styling. */
+.times{border:1px solid var(--line);border-radius:12px;background:#fff;padding:25px;margin:0 0 24px;box-shadow:0 8px 35px #24453606}
+.times-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:15px}
+.times-head h2{font:normal 30px/1.15 Georgia,serif;letter-spacing:-.6px;color:var(--ink);margin:2px 0 7px}
+.times-head p:not(.eyebrow){margin:0;color:var(--muted);font-size:12px}
+.times-date{white-space:nowrap;background:#ecf3e6;padding:9px 13px;border-radius:6px;font-size:11px;font-weight:700;color:var(--ink)}
+.times-switch{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.times-switch button{border:1px solid #cbd8c8;background:#fff;border-radius:6px;color:var(--ink);font-size:12px;font-weight:650;padding:9px 14px;min-height:41px}
+.times-switch button.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.times-switch .times-refresh{margin-left:auto;background:#f6f9f4}
+.times-switch .times-refresh:disabled{opacity:.45;cursor:wait}
+.times-context{font-size:12px;color:var(--muted);max-width:900px;margin:0 0 12px}
+.times-pick{background:#f0f6e5;border-left:3px solid var(--green);color:var(--ink);padding:11px 12px;font-size:12px;line-height:1.5;margin-bottom:14px;font-weight:600}
+.times-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:9px}
+.time-day{border:1px solid #dce2d7;background:#fbfcf9;border-radius:7px;padding:12px 11px;min-width:0}
+.time-day.is-today{border-color:var(--green);background:#f5faf1}
+.time-day.is-past{opacity:.55}
+.time-day-head{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:4px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.time-day-head h3{font-size:12px;line-height:1.4;margin:0}
+.time-day-status{font-size:9px;font-weight:650;color:var(--muted)}
+.time-day.is-today .time-day-status{color:var(--green)}
+.time-session{padding-top:10px;display:flex;flex-direction:column;gap:4px}
+.time-session + .time-session{margin-top:11px;border-top:1px dashed var(--line)}
+.time-session-title{font-size:10px;color:var(--muted)}
+.time-session strong{font-size:12px;line-height:1.35;color:var(--ink);font-variant-numeric:tabular-nums}
+.time-session small{font-size:10px;color:var(--muted);line-height:1.4}
+.time-session small.time-rain.low{color:#31724d}
+.time-session small.time-rain.mid{color:#8b641c}
+.time-session small.time-rain.high{color:#984631}
+.time-pick-tag{display:inline-block;align-self:start;color:#256448;background:#e1f0d5;padding:3px 6px;border-radius:4px;font-size:9px;font-weight:700}
+.times-status{margin:13px 0 5px;color:var(--muted);font-size:10px}
+.times-foot{font-size:11px;line-height:1.7;color:var(--muted);margin:0}
+.times-foot a{color:var(--green);font-weight:600}
+@media(max-width:1180px){.times-days{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:760px){.times{padding:17px 14px}.times-head{display:block}.times-head h2{font-size:26px}.times-date{display:inline-block;margin-top:10px}.times-days{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.times-switch{gap:7px}.times-switch button{flex:1;min-width:130px;padding:9px 6px}.times-switch .times-refresh{flex:0 0 auto;min-width:0;margin-left:0}.time-day{padding:11px 10px}.time-session strong{font-size:12px}}
+@media(max-width:380px){.times-days{grid-template-columns:1fr}.time-day{display:grid;grid-template-columns:1fr 1fr;gap:10px}.time-day-head{grid-column:1/-1}.time-session+.time-session{margin:0;padding-top:10px;border-top:0;border-left:1px dashed var(--line);padding-left:10px}}
