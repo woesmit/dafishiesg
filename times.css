@@ -11,6 +11,11 @@
 .times-switch .times-refresh:disabled{opacity:.45;cursor:wait}
 .times-context{font-size:12px;color:var(--muted);max-width:900px;margin:0 0 12px}
 .times-pick{background:#f0f6e5;border-left:3px solid var(--green);color:var(--ink);padding:11px 12px;font-size:12px;line-height:1.5;margin-bottom:14px;font-weight:600}
+ .times-weeks{display:flex;flex-direction:column;gap:22px}
+.times-week-head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin:0 0 12px;padding:0 0 9px;border-bottom:1px solid var(--line)}
+.times-week-head h3{font-size:15px;font-weight:750;letter-spacing:-.2px;margin:0 0 2px}
+.times-week-head p{font-size:10px;color:var(--muted);margin:0}
+.times-week-head>span{color:var(--muted);font-size:11px;white-space:nowrap}
 .times-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:9px}
 .time-day{border:1px solid #dce2d7;background:#fbfcf9;border-radius:7px;padding:12px 11px;min-width:0}
 .time-day.is-today{border-color:var(--green);background:#f5faf1}

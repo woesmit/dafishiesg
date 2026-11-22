@@ -1,10 +1,10 @@
-// Singapore weekly daylight fishing planner. Light-window suggestions, not bite predictions.
-export const FORECAST_URL='https://api.open-meteo.com/v1/forecast?latitude=1.3521&longitude=103.8198&daily=sunrise,sunset&hourly=precipitation_probability&timezone=Asia%2FSingapore&forecast_days=7&past_days=6';
+// Singapore rolling 14-day daylight fishing planner. Light-window suggestions, not bite predictions.
+export const FORECAST_URL='https://api.open-meteo.com/v1/forecast?latitude=1.3521&longitude=103.8198&daily=sunrise,sunset&hourly=precipitation_probability&timezone=Asia%2FSingapore&forecast_days=14';
 const pad=v=>String(v).padStart(2,'0');
 const isoOf=d=>`${d.getUTCFullYear()}-${pad(d.getUTCMonth()+1)}-${pad(d.getUTCDate())}`;
 export function sgToday(now=new Date()){return isoOf(new Date(now.getTime()+8*3600000));}
 export function addDays(iso,n){const d=new Date(iso+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+n);return isoOf(d);}
-export function currentWeek(today=sgToday()){const dow=new Date(today+'T00:00:00Z').getUTCDay();const mon=addDays(today,-((dow+6)%7));return Array.from({length:7},(_,i)=>addDays(mon,i));}
+export function nextFourteenDays(today=sgToday()){return Array.from({length:14},(_,i)=>addDays(today,i));}
 const rad=n=>n*Math.PI/180,norm=n=>(n%360+360)%360;
 // NOAA sunrise/sunset approximation at Singapore centre; a few minutes variance possible.
 export function solarMinutes(date,sunrise){
@@ -29,8 +29,8 @@ function rainRisk(data,date,start,end){
  for(let i=0;i<t.length;i++){if(!t[i].startsWith(date+'T'))continue;const at=fromIsoTime(t[i]);if(at!==null&&at>=start-30&&at<=end+30&&Number.isFinite(p[i]))readings.push(p[i]);}
  return readings.length?Math.max(...readings):null;
 }
-export function buildWeek(data,today=sgToday()){
- return currentWeek(today).map(date=>{
+export function buildFortnight(data,today=sgToday()){
+ return nextFourteenDays(today).map(date=>{
   const ix=data?.daily?.time?.indexOf(date)??-1;
   const rise=ix>=0?fromIsoTime(data?.daily?.sunrise?.[ix]):null;
   const set=ix>=0?fromIsoTime(data?.daily?.sunset?.[ix]):null;

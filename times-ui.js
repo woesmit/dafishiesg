@@ -1,4 +1,4 @@
-import {sgToday,currentWeek,buildWeek,bestWindow,formatTime,FORECAST_URL} from './fishing-times.js?v=20261121-1';
+import {sgToday,nextFourteenDays,buildFortnight,bestWindow,formatTime,FORECAST_URL} from './fishing-times.js?v=20261122-2';
 const $=id=>document.getElementById(id);
 const state={weather:null,mode:'freshwater',loaded:false,updated:null,day:sgToday()};
 const dateLabel=date=>new Intl.DateTimeFormat('en-SG',{weekday:'short',day:'numeric',month:'short',timeZone:'UTC'}).format(new Date(date+'T00:00:00Z'));
@@ -7,18 +7,29 @@ const rainLabel=p=>p===null?'Rain outlook unavailable':p<=30?'Lower shower risk'
 const range=w=>formatTime(w.start)+' – '+formatTime(w.end);
 function render(){
  state.day=sgToday();
- const days=buildWeek(state.weather,state.day),dates=currentWeek(state.day);
- $('week-range').textContent=shortLabel(dates[0])+' – '+shortLabel(dates[6])+' · SGT';
+ const days=buildFortnight(state.weather,state.day),dates=nextFourteenDays(state.day);
+ $('week-range').textContent=shortLabel(dates[0])+' – '+shortLabel(dates[13])+' · SGT';
  for(const b of document.querySelectorAll('[data-fishing-mode]')){const active=b.dataset.fishingMode===state.mode;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));}
  $('times-context').textContent=state.mode==='freshwater'
   ?'Freshwater lures: morning and late-afternoon daylight windows are useful starting points for peacock bass and snakehead. These are not measured catch predictions.'
   :'Coast / jetty: daylight-based planning only — NOT tide-adjusted bite predictions. Check local tides and currents before choosing a session.';
  const best=bestWindow(days,state.day);
  $('times-pick').textContent=best
-  ?'Lower-rain opportunity: '+dateLabel(best.date)+' · '+(best.slot==='am'?'morning':'evening')+' · '+range(best)+' ('+best.rain+'% peak forecast rain chance)'
+  ?'Lower-rain opportunity: '+dateLabel(best.date)+' · '+(best.slot==='am'?'morning':'evening')+' · '+range(best)+' ('+best.rain+'% peak forecast rain chance)'+(best.date>=days[7].date?' · long-range estimate':'')
   :'Start with morning or late-afternoon sessions; forecast-based ranking is currently unavailable.';
- $('times-grid').replaceChildren();
- for(const d of days){
+ const host=$('times-grid');host.replaceChildren();
+ for(let week=0;week<2;week++){
+  const group=days.slice(week*7,week*7+7);
+  const section=document.createElement('section');section.className='times-week';section.setAttribute('aria-label',week===0?'Week 1':'Week 2');
+  const heading=document.createElement('div');heading.className='times-week-head';
+  const left=document.createElement('div');
+  const label=document.createElement('h3');label.textContent=week===0?'Week 1 · Next 7 days':'Week 2 · Plan ahead';
+  const description=document.createElement('p');description.textContent=week===0?'Shorter-range forecast':'Longer-range forecast · greater uncertainty';
+  left.append(label,description);
+  const span=document.createElement('span');span.textContent=shortLabel(group[0].date)+' – '+shortLabel(group[6].date);
+  heading.append(left,span);section.append(heading);
+  const grid=document.createElement('div');grid.className='times-days';
+  for(const d of group){
   const card=document.createElement('article');card.className='time-day'+(d.past?' is-past':'')+(d.today?' is-today':'');
   const head=document.createElement('div');head.className='time-day-head';
   const title=document.createElement('h3');title.textContent=dateLabel(d.date);
@@ -33,11 +44,13 @@ function render(){
    if(best&&best.date===d.date&&best.slot===key){const badge=document.createElement('span');badge.className='time-pick-tag';badge.textContent='Lowest rain risk';session.append(badge);}
    card.append(session);
   }
-  $('times-grid').append(card);
+  grid.append(card);
+  }
+  section.append(grid);host.append(section);
  }
  const solarFallback=days.some(d=>d.estimated);
  $('times-status').textContent=state.loaded?(state.weather
-  ?'Weather forecast loaded · '+state.updated+' SGT · island-wide estimate'+(solarFallback?' · some sunrise/sunset times calculated':'')+'.'
+  ?'14-day weather outlook loaded · '+state.updated+' SGT · island-wide estimate · second-week forecasts are less certain'+(solarFallback?' · some sunrise/sunset times calculated':'')+'.'
   :'Live forecast unavailable. Showing calculated sunrise/sunset windows only; rain risk unknown.')
   :'Showing calculated daylight windows. Loading weather outlook…';
 }
